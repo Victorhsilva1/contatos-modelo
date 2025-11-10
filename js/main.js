@@ -1,7 +1,7 @@
 'use strict'
 
-import { lerContatos, criarContato } from "./contatos.js"
-
+import { lerContatos, criarContato, deletarContato } from "./contatos.js"
+ 
 const carregarCards = async () => {
     const contatos = await lerContatos()
     const container = document.getElementById('container')
@@ -24,7 +24,18 @@ const criarCards = (contato) => {
     const celular = document.createElement('p')
     celular.textContent = contato.celular
 
-    card.append(img, nome, celular)
+    //Adicionando agora um botão que já existe para excluir o contato (até por que 
+    // ele excluiria o ultimo, então coloquei um botão para ele saber qual excluir)
+    const botaoExcluir = document.createElement('button')
+    botaoExcluir.classList.add('button', 'button-card')
+    botaoExcluir.textContent = 'DELETAR'
+    botaoExcluir.addEventListener('click', async () => {
+        //encontrando o id do contato para deletar
+        await deletarContato(contato.id)
+        carregarCards()
+    })
+
+    card.append(img, nome, celular, botaoExcluir)
 
    return card
 }
@@ -43,7 +54,7 @@ const mostrarFormulario = () => {
 const mostrarCards = () => {
     main.classList.remove('form-show')
     main.classList.add('card-show')
-    document.querySelector('form')
+    document.querySelector('form').reset()
     document.getElementById('preview-image').src = './img/preview-icon.png'
 }
 
